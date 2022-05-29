@@ -15,6 +15,10 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'ylY4ntfuamAA-QkUTvg40LyuirPGIvgW',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+                'multipart/form-data' => 'yii\web\MultipartFormDataParser',
+            ],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -43,14 +47,31 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
-            'enablePrettyUrl' => true,
+            'class' => 'yii\web\UrlManager',
+            // Disable index.php
             'showScriptName' => false,
-            'rules' => [
-            ],
+            // Disable r= routes
+            'enablePrettyUrl' => true,
+            'rules' => array(),
         ],
-        */
+        'response' => [
+            'format' => yii\web\Response::FORMAT_JSON,
+        ],
+        'jwt' => [
+            'class' => \sizeg\jwt\Jwt::class,
+            'key' => 'secret',  //typically a long random string
+            // You have to configure ValidationData informing all claims you want to validate the token.
+            'jwtValidationData' => \app\components\JwtValidationData::class,
+        ],
+    ],
+    'modules' => [
+        'v1' => [
+            'class' => 'app\modules\v1\Module',
+        ],
+        'v2' => [
+            'class' => 'app\modules\v2\Module',
+        ],
     ],
     'params' => $params,
 ];
